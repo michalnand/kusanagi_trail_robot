@@ -39,3 +39,6 @@ share/python-wheels/
 .installed.cfg
 *.egg
 MANIFEST
+
+
+hardware/power_supply/*
