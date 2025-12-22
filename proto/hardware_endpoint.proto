@@ -1,0 +1,90 @@
+syntax = "proto3";
+
+package robot_hw_endpoint.grpc;
+
+import "ll.proto";
+
+service HardwareEndpoint {
+    rpc Ping(PingRequest) returns (PingResponse);
+    
+    rpc GetBMSStatus(StatusRequest) returns (BMSResponse);
+    rpc BMSControl(BMSRequest) returns (BMSResponse);
+
+    rpc GetIMUStatus(StatusRequest) returns (IMUResponse);
+    rpc IMUControl(IMURequest) returns (IMUResponse);
+
+    rpc GetMotorStatus(StatusRequest) returns (MotorResponse);
+    rpc MotorControl(MotorRequest) returns (MotorResponse);
+
+    rpc Camera(CameraRequest) returns (CameraResponse);
+}
+
+// ---------- STATUS ----------
+message StatusRequest {
+    uint32 dest_adr = 2;
+}
+
+// ---------- PING ----------
+message PingRequest {
+    uint32 dest_adr = 1;
+}
+
+message PingResponse {
+    bool receive_status     = 1;
+    bool crc_status         = 2;
+    bool ping_status        = 3;
+}
+
+// ---------- BMS ----------
+message BMSRequest {
+    uint32 dest_adr = 1;
+}
+
+message BMSResponse {
+    bool receive_status     = 1;
+    bool crc_status         = 2;
+    bool ping_status        = 3;
+
+    LLBMSResponse response = 4;
+}
+
+// ---------- IMU ----------
+message IMURequest {
+    uint32 dest_adr = 1;
+}
+
+message IMUResponse {
+    bool receive_status     = 1;
+    bool crc_status         = 2;
+    bool ping_status        = 3;
+
+    LLIMUResponse response = 4;
+}
+
+// ---------- MOTOR ----------
+message MotorRequest {
+    uint32 dest_adr = 1;
+}
+
+message MotorResponse {
+    bool receive_status     = 1;
+    bool crc_status         = 2;
+    bool ping_status        = 3;
+
+    LLMotorResponse response = 4;
+}
+
+// ---------- CAMERA ----------
+message CameraRequest {
+    uint32 camera_id = 1;
+    uint32 width     = 2;
+    uint32 height    = 3;
+    uint32 channels  = 4; // 1=gray, 3=RGB
+}
+
+message CameraResponse {
+    uint32 width     = 1;
+    uint32 height    = 2;
+    uint32 channels  = 3;
+    bytes  image     = 4;
+}

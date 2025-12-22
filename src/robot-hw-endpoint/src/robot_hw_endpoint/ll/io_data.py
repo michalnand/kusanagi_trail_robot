@@ -1,11 +1,15 @@
 import struct
-import io_pb2 
+from robot_hw_endpoint.ll import ll_pb2
 
 class IOData:
 
     # Empty
     EMPTY_FORMAT = "<i"
     EMPTY_SIZE   = struct.calcsize(EMPTY_FORMAT)
+
+    # Status
+    STATUS_FORMAT = "<i"
+    STATUS_SIZE   = struct.calcsize(STATUS_FORMAT)
 
     # Ping
     PING_FORMAT = "<iiiii"
@@ -33,6 +37,23 @@ class IOData:
     MOTOR_RESP_SIZE   = struct.calcsize(MOTOR_RESP_FORMAT)
 
 
+     
+    def _empty_response_from_bytes(self, buffer: bytes) -> ll_pb2.EmptyResponse:
+        (msg_type,) = struct.unpack(self.EMPTY_FORMAT, buffer[:self.EMPTY_SIZE])
+
+        msg = ll_pb2.EmptyResponse()
+        msg.type = msg_type
+        return msg
+
+    
+
+    def _status_request_to_bytes(self, msg) -> bytes:
+        return struct.pack(
+            self.STATUS_FORMAT,
+            msg.type
+        )
+
+
 
     def _ping_request_to_bytes(self, msg) -> bytes:
         return struct.pack(
@@ -44,10 +65,10 @@ class IOData:
             msg.data_3,
         )
     
-    def _ping_response_from_bytes(self, buffer: bytes) -> io_pb2.PingResponse:
+    def _ping_response_from_bytes(self, buffer: bytes) -> ll_pb2.LLPingResponse:
         values = struct.unpack(self.PING_FORMAT, buffer[:self.PING_SIZE])
 
-        msg = io_pb2.PingResponse()
+        msg = ll_pb2.LLPingResponse()
         msg.type   = values[0]
         msg.data_0 = values[1]
         msg.data_1 = values[2]
@@ -65,10 +86,10 @@ class IOData:
             msg.main_bus_b_enable,
         )
     
-    def _bms_response_from_bytes(self, buffer: bytes) -> io_pb2.BMSResponse:
+    def _bms_response_from_bytes(self, buffer: bytes) -> ll_pb2.LLBMSResponse:
         v = struct.unpack(self.BMS_RESP_FORMAT, buffer[:self.BMS_RESP_SIZE])
 
-        msg = io_pb2.BMSResponse()
+        msg = ll_pb2.LLBMSResponse()
 
         msg.type                = v[0]
         msg.cell_voltage_1      = v[1]
@@ -87,10 +108,10 @@ class IOData:
     def _imu_request_to_bytes(self, msg) -> bytes:
         return struct.pack(self.IMU_REQ_FORMAT, msg.type)
     
-    def _imu_response_from_bytes(self, buffer: bytes) -> io_pb2.IMUResponse:
+    def _imu_response_from_bytes(self, buffer: bytes) -> ll_pb2.LLIMUResponse:
         v = struct.unpack(self.IMU_RESP_FORMAT, buffer[:self.IMU_RESP_SIZE])
 
-        msg = io_pb2.IMUResponse()
+        msg = ll_pb2.LLIMUResponse()
         msg.type  = v[0]
         msg.roll  = v[1]
         msg.pitch = v[2]
@@ -108,13 +129,13 @@ class IOData:
             msg.type,
             msg.required_velocity,
             msg.maximum_velocity,
-            msg.maximum_acceleration,
+            msg.maximum_acceleration
         )
     
-    def _motor_response_from_bytes(self, buffer: bytes) -> io_pb2.MotorResponse:
+    def _motor_response_from_bytes(self, buffer: bytes) -> ll_pb2.LLMotorResponse:
         v = struct.unpack(self.MOTOR_RESP_FORMAT, buffer[:self.MOTOR_RESP_SIZE])
 
-        msg = io_pb2.MotorResponse()
+        msg = ll_pb2.LLMotorResponse()
         msg.type              = v[0]
         msg.current_velocity  = v[1]
         msg.current_encoder   = v[2]
@@ -122,12 +143,4 @@ class IOData:
     
 
     
-    
-    def _empty_response_from_bytes(self, buffer: bytes) -> io_pb2.EmptyResponse:
-        (msg_type,) = struct.unpack(self.EMPTY_FORMAT, buffer[:self.EMPTY_SIZE])
-
-        msg = io_pb2.EmptyResponse()
-        msg.type = msg_type
-        return msg
-
    

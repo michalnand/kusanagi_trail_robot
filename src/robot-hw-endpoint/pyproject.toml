@@ -1,0 +1,25 @@
+[build-system]
+requires = ["setuptools>=68", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "robot-hardware-endpoint"
+version = "0.1.0"
+description = "Low-level hardware access for outdoor robot"
+readme = "README.md"
+requires-python = ">=3.9"
+
+
+dependencies = [
+  "grpcio>=1.60",
+  "grpcio-tools>=1.60",
+  "protobuf>=4.25",
+  "numpy>=1.23",
+  "pyserial>=3.5"
+]
+
+[tool.setuptools]
+package-dir = {"" = "src"}
+
+[tool.setuptools.packages.find]
+where = ["src"]

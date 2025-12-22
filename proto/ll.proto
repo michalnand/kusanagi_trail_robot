@@ -1,0 +1,108 @@
+syntax = "proto3";
+
+package robot_hw_endpoint.grpc;
+
+
+enum LLMessageType {
+    MSG_NONE                = 0;
+    MSG_STATUS_REQUEST      = 1;
+
+    MSG_PING_REQUEST        = 2;
+    MSG_PING_RESPONSE       = 3;
+    
+    MSG_BMS_REQUEST         = 4;
+    MSG_BMS_RESPONSE        = 5;
+    
+    MSG_IMU_REQUEST         = 6;
+    MSG_IMU_RESPONSE        = 7;
+    
+    MSG_MOTOR_REQUEST       = 8;
+    MSG_MOTOR_RESPONSE      = 9;
+}
+    
+
+message LLEmptyResponse {
+   LLMessageType type    = 1;
+}
+
+// returns status, not changing any variables
+message LLStatusRequest {
+   LLMessageType type    = 1;
+}
+
+
+// ping, mostly for connectLLn debug
+message LLPingRequest {
+    LLMessageType type      = 1;
+    int32 data_0            = 2;
+    int32 data_1            = 3;
+    int32 data_2            = 4;
+    int32 data_3            = 5;
+}
+
+message LLPingResponse {
+    LLMessageType type      = 1;
+    int32 data_0            = 2;
+    int32 data_1            = 3;
+    int32 data_2            = 4;
+    int32 data_3            = 5;
+}
+
+
+// baterry power management
+message LLBMSRequest {
+    LLMessageType type          = 1;
+
+    bool main_bus_a_enable      = 2;
+    bool main_bus_b_enable      = 3;
+}
+
+message LLBMSResponse { 
+    LLMessageType type          = 1;  
+
+    int32 cell_voltage_1        = 2;
+    int32 cell_voltage_2        = 3;
+    int32 cell_voltage_3        = 4;   
+
+    int32 main_bus_a_voltage    = 5;
+    int32 main_bus_a_current    = 6;
+
+    int32 main_bus_b_voltage    = 7;
+    int32 main_bus_b_current    = 8;
+
+    bool main_bus_a_enabled     = 9;
+    bool main_bus_b_enabled     = 10;
+}
+
+// IMU + GPS unit
+message LLIMURequest {
+    LLMessageType type    = 1;
+}
+
+message LLIMUResponse {
+    LLMessageType type    = 1;
+   
+    int32 roll          = 2; 
+    int32 pitch         = 3; 
+    int32 yaw           = 4;
+
+    int32 gps_x         = 5;
+    int32 gps_y         = 6;
+    int32 gps_h         = 7;
+}
+
+// motor controll unit
+message LLMotorRequest {
+    LLMessageType type            = 1;
+
+    int32 required_velocity     = 2;
+    int32 maximum_velocity      = 3;
+    int32 maximum_acceleration  = 4;
+}
+
+message LLMotorResponse {
+    LLMessageType type            = 1;
+
+    int32 current_velocity      = 2; 
+    int32 current_encoder       = 3; 
+}

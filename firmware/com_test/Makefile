@@ -13,7 +13,7 @@ DEVICE_PATH		= $(STM_PATH)/device/
 HAL_PATH		= $(STM_PATH)/STM32G0xx_HAL_Driver/
 DRIVERS_PATH	= $(STM_PATH)/drivers/
 
-PROTO_PATH		= ../../proto/	
+PROTO_PATH		= ../proto/	
 
 GCCPREFIX  = arm-none-eabi-
 OUTPUT     = bin/build

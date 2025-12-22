@@ -4,7 +4,8 @@ import threading
 import time
 import numpy
 
-from frame_spec import *
+from .frame_spec import *
+
 
 class SerialBus:
     def __init__(self, port, baud_rate = 115200):

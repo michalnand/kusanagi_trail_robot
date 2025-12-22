@@ -1,10 +1,10 @@
-import io_pb2   
+
 import random
 import time
 
-
-from serial_bus import *
-from io_data    import *
+from robot_hw_endpoint.ll import ll_pb2
+from robot_hw_endpoint.ll.serial_bus import SerialBus
+from robot_hw_endpoint.ll.io_data import IOData
 
 
 
@@ -25,7 +25,7 @@ class SerialProtocolEndpoint(SerialBus, IOData):
         rx_crc_status is False
         rx_data is None
     '''
-    def send(self, src_adr, dest_adr, request, time_limit = 0.025):
+    def send(self, src_adr, dest_adr, request, time_limit = 0.05):
         # prepare for new receiving 
         self.init_receiving_data()
 
@@ -34,7 +34,6 @@ class SerialProtocolEndpoint(SerialBus, IOData):
 
         self.send_data(src_adr, dest_adr, transmit_buffer)
 
-        
         time_start = time.time()
         time_stop  = time_start + time_limit
 
@@ -47,18 +46,17 @@ class SerialProtocolEndpoint(SerialBus, IOData):
                 self.init_receiving_data()
 
                 # deserialise data
-                response = self._parse_received_data(rx_buffer)
-
-                return  rx_src_address, rx_dest_address, rx_crc_status, response, True
+                try:
+                    response = self._parse_received_data(rx_buffer)
+                    return  rx_src_address, rx_dest_address, rx_crc_status, response, True
+                except:
+                    return  rx_src_address, rx_dest_address, False, None, False
 
             elif time.time() > time_stop: 
                 # prepare for new receiving
                 self.init_receiving_data()
 
-                # deserialise data
-                response = self._parse_received_data(rx_buffer)
-
-                return  rx_src_address, rx_dest_address, rx_crc_status, response, False
+                return  rx_src_address, rx_dest_address, False, None, False
 
             else:
                 time.sleep(0.001)
@@ -66,31 +64,33 @@ class SerialProtocolEndpoint(SerialBus, IOData):
 
     def _parse_received_data(self, buffer):
         if buffer is None:
-            return io_pb2.EmptyResponse()
+            return ll_pb2.EmptyResponse()
         
         data_type = buffer[0]
 
-        if data_type == io_pb2.MSG_PING_RESPONSE:
+        if data_type == ll_pb2.MSG_PING_RESPONSE:
             return self._ping_response_from_bytes(buffer)
-        elif data_type == io_pb2.MSG_BMS_RESPONSE:
+        elif data_type == ll_pb2.MSG_BMS_RESPONSE:
             return self._bms_response_from_bytes(buffer)
-        elif data_type == io_pb2.MSG_IMU_RESPONSE:
+        elif data_type == ll_pb2.MSG_IMU_RESPONSE:
             return self._imu_response_from_bytes(buffer)
-        elif data_type == io_pb2.MSG_MOTOR_RESPONSE:
+        elif data_type == ll_pb2.MSG_MOTOR_RESPONSE:
             return self._motor_response_from_bytes(buffer)
         
-        return io_pb2.EmptyResponse()
+        return ll_pb2.EmptyResponse()
 
     def _parse_transmit_data(self, data):
         data_type = data.type
 
-        if data_type == io_pb2.MSG_PING_REQUEST:
+        if data_type == ll_pb2.MSG_STATUS_REQUEST:
+            return self._status_request_to_bytes(data)
+        elif data_type == ll_pb2.MSG_PING_REQUEST:
             return self._ping_request_to_bytes(data)
-        elif data_type == io_pb2.MSG_BMS_REQUEST:
+        elif data_type == ll_pb2.MSG_BMS_REQUEST:
             return self._bms_request_to_bytes(data)
-        elif data_type == io_pb2.MSG_IMU_REQUEST:
+        elif data_type == ll_pb2.MSG_IMU_REQUEST:
             return self._imu_request_to_bytes(data)
-        elif data_type == io_pb2.MSG_MOTOR_REQUEST:
+        elif data_type == ll_pb2.MSG_MOTOR_REQUEST:
             return self._motor_request_to_bytes(data)
 
         return None
@@ -101,9 +101,9 @@ def scan_bus(com_buffer):
     for device_address in range(255):
         print("scanning ", device_address)
         # ping test
-        request        = io_pb2.PingRequest()
+        request        = ll_pb2.PingRequest()
 
-        request.type   = io_pb2.MSG_PING_REQUEST
+        request.type   = ll_pb2.LLMSG_PING_REQUEST
         request.data_0 = random.randint(0, 2**31)
         request.data_1 = random.randint(0, 2**31)
         request.data_2 = random.randint(0, 2**31)
@@ -132,14 +132,16 @@ if __name__ == "__main__":
     my_address          = 7
     device_address      = 100
 
-    # ping test
-    request        = io_pb2.PingRequest()
+    # ping test 
+    request        = ll_pb2.LLPingRequest()
 
-    request.type   = io_pb2.MSG_PING_REQUEST
+    request.type   = ll_pb2.MSG_PING_REQUEST
     request.data_0 = random.randint(0, 2**31)
     request.data_1 = random.randint(0, 2**31)
     request.data_2 = random.randint(0, 2**31)
     request.data_3 = random.randint(0, 2**31)
+
+    print(request)
 
     rx_src_address, rx_dest_address, rx_crc_status, response, status = endpoint.send(my_address, device_address, request)
 
@@ -149,9 +151,9 @@ if __name__ == "__main__":
 
     
     # BMS test
-    request        = io_pb2.BMSRequest()
+    request        = ll_pb2.LLBMSRequest()
 
-    request.type              = io_pb2.MSG_BMS_REQUEST
+    request.type              = ll_pb2.MSG_BMS_REQUEST
     request.main_bus_a_enable = True
     request.main_bus_b_enable = True
     
@@ -161,9 +163,9 @@ if __name__ == "__main__":
     print(response, "\n\n")
 
     # IMU test
-    request        = io_pb2.IMURequest()
+    request        = ll_pb2.LLIMURequest()
 
-    request.type              = io_pb2.MSG_IMU_REQUEST
+    request.type    = ll_pb2.MSG_IMU_REQUEST
     
     rx_src_address, rx_dest_address, rx_crc_status, response, status = endpoint.send(my_address, device_address, request)
 
@@ -172,10 +174,10 @@ if __name__ == "__main__":
 
 
 
-    # MOTOR test
-    request        = io_pb2.MotorRequest()
+    # MOTOR test    
+    request        = ll_pb2.LLMotorRequest()
 
-    request.type   = io_pb2.MSG_MOTOR_REQUEST
+    request.type   = ll_pb2.MSG_MOTOR_REQUEST
     
     rx_src_address, rx_dest_address, rx_crc_status, response, status = endpoint.send(my_address, device_address, request)
 
