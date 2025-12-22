@@ -43,9 +43,8 @@ message BMSRequest {
 message BMSResponse {
     bool receive_status     = 1;
     bool crc_status         = 2;
-    bool ping_status        = 3;
 
-    LLBMSResponse response = 4;
+    LLBMSResponse response = 3;
 }
 
 // ---------- IMU ----------
@@ -56,9 +55,8 @@ message IMURequest {
 message IMUResponse {
     bool receive_status     = 1;
     bool crc_status         = 2;
-    bool ping_status        = 3;
 
-    LLIMUResponse response = 4;
+    LLIMUResponse response = 3;
 }
 
 // ---------- MOTOR ----------
@@ -69,9 +67,8 @@ message MotorRequest {
 message MotorResponse {
     bool receive_status     = 1;
     bool crc_status         = 2;
-    bool ping_status        = 3;
 
-    LLMotorResponse response = 4;
+    LLMotorResponse response = 3;
 }
 
 // ---------- CAMERA ----------
