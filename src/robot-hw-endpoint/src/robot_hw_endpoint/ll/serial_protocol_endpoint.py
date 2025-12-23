@@ -6,11 +6,13 @@ from robot_hw_endpoint.ll import ll_pb2
 from robot_hw_endpoint.ll.serial_bus import SerialBus
 from robot_hw_endpoint.ll.io_data import IOData
 
-
+import threading
 
 class SerialProtocolEndpoint(SerialBus, IOData):
     def __init__(self, port, baud_rate = 115200):
         super().__init__(port, baud_rate )
+
+        self.mutex = threading.Lock()
 
     '''
         send data_msg as specified in proto file
@@ -26,42 +28,43 @@ class SerialProtocolEndpoint(SerialBus, IOData):
         rx_data is None
     '''
     def send(self, src_adr, dest_adr, request, time_limit = 0.05):
-        # prepare for new receiving 
-        self.init_receiving_data()
+        with self.mutex:
+        
+            # prepare for new receiving 
+            self.init_receiving_data()
 
-        # serialise protobuffer data
-        transmit_buffer = self._parse_transmit_data(request)
+            # serialise protobuffer data
+            transmit_buffer = self._parse_transmit_data(request)
 
-        self.send_data(src_adr, dest_adr, transmit_buffer)
+            self.send_data(src_adr, dest_adr, transmit_buffer)
 
-        time_start = time.time()
-        time_stop  = time_start + time_limit
+            time_start = time.time()
+            time_stop  = time_start + time_limit
 
-        while True:
-            rx_done, rx_src_address, rx_dest_address, rx_crc_status, rx_buffer = self.get_received_data()
+            while True:
+                rx_done, rx_src_address, rx_dest_address, rx_crc_status, rx_buffer = self.get_received_data()
 
-            # receiving finished
-            if rx_done:
-                # prepare for new receiving
-                self.init_receiving_data()
+                # receiving finished
+                if rx_done:
+                    # prepare for new receiving
+                    self.init_receiving_data()
 
-                # deserialise data
-                try:
-                    response = self._parse_received_data(rx_buffer)
-                    return  rx_src_address, rx_dest_address, rx_crc_status, response, True
-                except:
+                    # deserialise data
+                    try:
+                        response = self._parse_received_data(rx_buffer)
+                        return  rx_src_address, rx_dest_address, rx_crc_status, response, True
+                    except:
+                        return  rx_src_address, rx_dest_address, False, None, False
+
+                elif time.time() > time_stop: 
+                    # prepare for new receiving
+                    self.init_receiving_data()
                     return  rx_src_address, rx_dest_address, False, None, False
 
-            elif time.time() > time_stop: 
-                # prepare for new receiving
-                self.init_receiving_data()
-
-                return  rx_src_address, rx_dest_address, False, None, False
-
-            else:
-                time.sleep(0.001)
-        
-
+                else:
+                    time.sleep(0.001)
+            
+    
     def _parse_received_data(self, buffer):
         if buffer is None:
             return ll_pb2.EmptyResponse()

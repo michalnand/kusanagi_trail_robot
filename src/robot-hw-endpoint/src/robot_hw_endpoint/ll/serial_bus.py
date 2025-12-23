@@ -12,7 +12,7 @@ class SerialBus:
         self.port       = port
         self.baud_rate  = baud_rate
 
-        self.mutex = threading.Lock()
+        self.sb_mutex = threading.Lock()
         self.init_receiving_data()
 
 
@@ -144,15 +144,15 @@ class SerialBus:
 
 
     def is_new_data(self):
-        with self.mutex:
+        with self.sb_mutex:
             return self.rx_done
         
     def get_received_data(self):
-        with self.mutex:
+        with self.sb_mutex:
             return self.rx_done, self.rx_src_address, self.rx_dest_address, self.rx_crc_status, self.rx_data
         
     def init_receiving_data(self):
-        with self.mutex:
+        with self.sb_mutex:
             self.rx_done            = False
             self.rx_src_address     = 0
             self.rx_dest_address    = 0 
@@ -161,7 +161,7 @@ class SerialBus:
 
     def _update_receiving_data(self, rx_src_address, rx_dest_address, crc_valid, rx_buffer):
         
-        with self.mutex:
+        with self.sb_mutex:
             self.rx_done            = True
             self.rx_src_address     = rx_src_address
             self.rx_dest_address    = rx_dest_address 

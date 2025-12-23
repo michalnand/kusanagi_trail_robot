@@ -19,7 +19,7 @@ if __name__ == "__main__":
     error = 0
     device_address = 100
 
-    num_samples = 1000
+    num_samples = 100
 
     time_all = []
 
