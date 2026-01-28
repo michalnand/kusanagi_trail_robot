@@ -11,7 +11,9 @@
 
 #define CTRL1_XL            ((uint8_t)0x10)
 #define CTRL2_G             ((uint8_t)0x11)
-
+#define CTRL7_G             ((uint8_t)0x16)
+#define CTRL6_C             ((uint8_t)0x15)
+#define CTRL8_XL            ((uint8_t)0x17)
 
 // gyroscope X axis
 #define OUTX_L_G            ((uint8_t)0x22)
@@ -65,17 +67,35 @@ int IMULL::init(I2C_Interface &i2c)
     
     
     // accelerometer init
-    // +-2g range
-    // 208Hz data rate
-    this->i2c->write_reg(LSM6DSMTR_ADDR, CTRL1_XL, (1<<6)|(1<<5));
+    // +-2g range, FS_XL = 0, 0, (bits 2, 3) 
+    // 416Hz data rate, ODR_XL = 0, 1, 1, 0, (bits 7, 6, 5, 4)
+    // LFP enabled, bit 1
+    this->i2c->write_reg(LSM6DSMTR_ADDR, CTRL1_XL, (1<<6)|(1<<5)|(1<<1));
+
 
     // gyroscope init
-    // 500 dps range
-    // 208Hz data rate
-    this->i2c->write_reg(LSM6DSMTR_ADDR, CTRL2_G, (1<<6)|(1<<4)|(1<<2));
+    // 500 dps range, FS_G = 0 1 (bits 2, 3)
+    // 416Hz data rate, ODR_G = 0 1 1 0, (bits 7, 6, 5, 4)
+    this->i2c->write_reg(LSM6DSMTR_ADDR, CTRL2_G, (1<<6)|(1<<5)|(1<<2));
+
+    // gyro high performance mode, G_HM_MODE  = 1, bit 7
+    // gyro high pass filter enable, HP_EN_G = 1, bit 6
+    // high pass frequency set 16mHz, (bits 4, 5)
+    this->i2c->write_reg(LSM6DSMTR_ADDR, CTRL7_G, (1<<7)|(1<<6));
+
+    // set low pass filter for gyro
+    // FTYPE[1:0] = 10, LPF1 cutoff = ODR_G / 4
+    this->i2c->write_reg(LSM6DSMTR_ADDR, CTRL6_C, (1<<1));
 
 
     delay_loops(10000);
+
+    // dummy read
+    for (unsigned int i = 0; i < 10; i++)
+    {
+        this->read();   
+    }
+
 
     // estimate gyro offset
 

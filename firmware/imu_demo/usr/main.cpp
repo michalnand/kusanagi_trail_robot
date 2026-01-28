@@ -40,6 +40,7 @@ int main()
     while (1)
     {
         led_2 = 0;
+        led_1 = 1;
 
         int status = imu_ll.read_status();
         imu_ll.read();  
@@ -52,13 +53,16 @@ int main()
         terminal << "}\n";
         terminal << "<";
 
+       
+
+
+        delay_loops(10000);
+        
         if (status == 1)
         {
             led_2 = 1;
         }
 
-        led_1 = 1;
-        delay_loops(100000);
         led_1 = 0;
         delay_loops(100000);
     }

@@ -144,9 +144,11 @@ if __name__ == "__main__":
 
     visualiser = visualise.Visualise()
 
-    roll = 0
-    pitch = 0
-    yaw = 0
+   
+
+    roll_bias = None
+    pitch_bias = None
+    yaw_bias = None
     
     while True:
         parsed, success, dt = json_loader.get_json()
@@ -170,7 +172,20 @@ if __name__ == "__main__":
             #pitch = numpy.arctan2(-ax, numpy.sqrt(ay**2 + az**2))
 
             
-            roll, pitch, yaw = madgwick_imu(ax, ay, az, gx, gy, gz, dt=dt, beta=0.1)
+            roll, pitch, yaw = madgwick_imu(ax, ay, az, gx, gy, gz, dt=dt, beta=0.25)
+
+            if roll_bias is None:
+                roll_bias = roll
+            
+            if pitch_bias is None:
+                pitch_bias = pitch
+
+            if yaw_bias is None:
+                yaw_bias = yaw
+
+            #roll = roll - roll_bias
+            #pitch = pitch - pitch_bias
+            #yaw = yaw - yaw_bias
 
             #roll, pitch, yaw = imu_fusion(ax, ay, az, gx, gy, gz, dt=dt, alpha=0.2)
 
