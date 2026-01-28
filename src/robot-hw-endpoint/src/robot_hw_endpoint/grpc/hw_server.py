@@ -65,11 +65,79 @@ class HWServer:
     
 
 
-    def GetBMSStatus(self, request, context):
-        pass
+   
+    def GetBMSStatus(self, request, context): 
+        device_address = request.dest_adr
+
+        # create status request
+        ll_request          = ll_pb2.LLStatusRequest()
+        ll_request.dest_adr = device_address
+
+        # send to bus
+        rx_src_address, rx_dest_address, rx_crc_status, ll_response, status = self.hw_endpoint.send(self.master_address, device_address, ll_request)
+
+        # parse response
+        response = ll_pb2.BMSResponse()
+        response.receive_status = status
+        response.crc_status     = rx_crc_status
+        if status == True and rx_crc_status == True and ll_response is not None:
+            response.response = ll_response
+
+
+
+        return response
+
+
 
     def BMSControl(self, request, context):
-        pass
+        device_address = request.dest_adr
+
+
+        # create ping request
+        ll_request          = ll_pb2.LLBMSRequest()
+
+        ll_request.type              = ll_pb2.MSG_BMS_REQUEST
+        ll_request.main_bus_a_enable = request.main_bus_a_enable
+        ll_request.main_bus_b_enable = request.main_bus_b_enable
+
+        
+        # send to bus
+        rx_src_address, rx_dest_address, rx_crc_status, ll_response, status = self.hw_endpoint.send(self.master_address, device_address, ll_request)
+        
+        print("AAAA")
+        print(ll_response)
+
+        
+        # parse response
+        response = hardware_endpoint_pb2.BMSResponse()
+
+        response.receive_status     = status
+        response.crc_status         = rx_crc_status
+
+        if status == True and rx_crc_status == True and ll_response is not None:
+            if ll_response.type == ll_pb2.MSG_BMS_RESPONSE:
+                response.cell_voltage_1        = ll_response.cell_voltage_1 
+                response.cell_voltage_2        = ll_response.cell_voltage_2
+                response.cell_voltage_3        = ll_response.cell_voltage_3  
+
+                response.main_bus_a_voltage    = ll_response.main_bus_a_voltage 
+                response.main_bus_a_current    = ll_response.main_bus_a_current
+
+                response.main_bus_b_voltage    = ll_response.main_bus_b_voltage 
+                response.main_bus_b_current    = ll_response.main_bus_b_current
+
+                response.main_bus_a_enabled     = ll_response.main_bus_a_enabled
+                response.main_bus_b_enabled     = ll_response.main_bus_b_enabled
+            else:
+                response.receive_status = False
+        else:
+            response.receive_status = False
+
+        return response
+
+
+
+
 
     def GetIMUStatus(self, request, context):
         pass

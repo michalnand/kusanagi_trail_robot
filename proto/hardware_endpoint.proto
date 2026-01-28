@@ -38,13 +38,27 @@ message PingResponse {
 // ---------- BMS ----------
 message BMSRequest {
     uint32 dest_adr = 1;
+    
+    bool main_bus_a_enable      = 2;
+    bool main_bus_b_enable      = 3;
 }
 
 message BMSResponse {
     bool receive_status     = 1;
     bool crc_status         = 2;
 
-    LLBMSResponse response = 3;
+    int32 cell_voltage_1        = 3;
+    int32 cell_voltage_2        = 4;
+    int32 cell_voltage_3        = 5;   
+
+    int32 main_bus_a_voltage    = 6;
+    int32 main_bus_a_current    = 7;
+
+    int32 main_bus_b_voltage    = 8;
+    int32 main_bus_b_current    = 9;
+
+    bool main_bus_a_enabled     = 10;
+    bool main_bus_b_enabled     = 11;
 }
 
 // ---------- IMU ----------

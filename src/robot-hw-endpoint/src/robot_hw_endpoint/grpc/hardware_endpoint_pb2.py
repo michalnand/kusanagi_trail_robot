@@ -25,7 +25,7 @@ _sym_db = _symbol_database.Default()
 from . import ll_pb2 as ll__pb2
 
 
-DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n\x17hardware_endpoint.proto\x12\x16robot_hw_endpoint.grpc\x1a\x08ll.proto\"!\n\rStatusRequest\x12\x10\n\x08\x64\x65st_adr\x18\x02 \x01(\r\"\x1f\n\x0bPingRequest\x12\x10\n\x08\x64\x65st_adr\x18\x01 \x01(\r\"O\n\x0cPingResponse\x12\x16\n\x0ereceive_status\x18\x01 \x01(\x08\x12\x12\n\ncrc_status\x18\x02 \x01(\x08\x12\x13\n\x0bping_status\x18\x03 \x01(\x08\"\x1e\n\nBMSRequest\x12\x10\n\x08\x64\x65st_adr\x18\x01 \x01(\r\"r\n\x0b\x42MSResponse\x12\x16\n\x0ereceive_status\x18\x01 \x01(\x08\x12\x12\n\ncrc_status\x18\x02 \x01(\x08\x12\x37\n\x08response\x18\x03 \x01(\x0b\x32%.robot_hw_endpoint.grpc.LLBMSResponse\"\x1e\n\nIMURequest\x12\x10\n\x08\x64\x65st_adr\x18\x01 \x01(\r\"r\n\x0bIMUResponse\x12\x16\n\x0ereceive_status\x18\x01 \x01(\x08\x12\x12\n\ncrc_status\x18\x02 \x01(\x08\x12\x37\n\x08response\x18\x03 \x01(\x0b\x32%.robot_hw_endpoint.grpc.LLIMUResponse\" \n\x0cMotorRequest\x12\x10\n\x08\x64\x65st_adr\x18\x01 \x01(\r\"v\n\rMotorResponse\x12\x16\n\x0ereceive_status\x18\x01 \x01(\x08\x12\x12\n\ncrc_status\x18\x02 \x01(\x08\x12\x39\n\x08response\x18\x03 \x01(\x0b\x32\'.robot_hw_endpoint.grpc.LLMotorResponse\"S\n\rCameraRequest\x12\x11\n\tcamera_id\x18\x01 \x01(\r\x12\r\n\x05width\x18\x02 \x01(\r\x12\x0e\n\x06height\x18\x03 \x01(\r\x12\x10\n\x08\x63hannels\x18\x04 \x01(\r\"P\n\x0e\x43\x61meraResponse\x12\r\n\x05width\x18\x01 \x01(\r\x12\x0e\n\x06height\x18\x02 \x01(\r\x12\x10\n\x08\x63hannels\x18\x03 \x01(\r\x12\r\n\x05image\x18\x04 \x01(\x0c\x32\xe1\x05\n\x10HardwareEndpoint\x12Q\n\x04Ping\x12#.robot_hw_endpoint.grpc.PingRequest\x1a$.robot_hw_endpoint.grpc.PingResponse\x12Z\n\x0cGetBMSStatus\x12%.robot_hw_endpoint.grpc.StatusRequest\x1a#.robot_hw_endpoint.grpc.BMSResponse\x12U\n\nBMSControl\x12\".robot_hw_endpoint.grpc.BMSRequest\x1a#.robot_hw_endpoint.grpc.BMSResponse\x12Z\n\x0cGetIMUStatus\x12%.robot_hw_endpoint.grpc.StatusRequest\x1a#.robot_hw_endpoint.grpc.IMUResponse\x12U\n\nIMUControl\x12\".robot_hw_endpoint.grpc.IMURequest\x1a#.robot_hw_endpoint.grpc.IMUResponse\x12^\n\x0eGetMotorStatus\x12%.robot_hw_endpoint.grpc.StatusRequest\x1a%.robot_hw_endpoint.grpc.MotorResponse\x12[\n\x0cMotorControl\x12$.robot_hw_endpoint.grpc.MotorRequest\x1a%.robot_hw_endpoint.grpc.MotorResponse\x12W\n\x06\x43\x61mera\x12%.robot_hw_endpoint.grpc.CameraRequest\x1a&.robot_hw_endpoint.grpc.CameraResponseb\x06proto3')
+DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n\x17hardware_endpoint.proto\x12\x16robot_hw_endpoint.grpc\x1a\x08ll.proto\"!\n\rStatusRequest\x12\x10\n\x08\x64\x65st_adr\x18\x02 \x01(\r\"\x1f\n\x0bPingRequest\x12\x10\n\x08\x64\x65st_adr\x18\x01 \x01(\r\"O\n\x0cPingResponse\x12\x16\n\x0ereceive_status\x18\x01 \x01(\x08\x12\x12\n\ncrc_status\x18\x02 \x01(\x08\x12\x13\n\x0bping_status\x18\x03 \x01(\x08\"T\n\nBMSRequest\x12\x10\n\x08\x64\x65st_adr\x18\x01 \x01(\r\x12\x19\n\x11main_bus_a_enable\x18\x02 \x01(\x08\x12\x19\n\x11main_bus_b_enable\x18\x03 \x01(\x08\"\xa9\x02\n\x0b\x42MSResponse\x12\x16\n\x0ereceive_status\x18\x01 \x01(\x08\x12\x12\n\ncrc_status\x18\x02 \x01(\x08\x12\x16\n\x0e\x63\x65ll_voltage_1\x18\x03 \x01(\x05\x12\x16\n\x0e\x63\x65ll_voltage_2\x18\x04 \x01(\x05\x12\x16\n\x0e\x63\x65ll_voltage_3\x18\x05 \x01(\x05\x12\x1a\n\x12main_bus_a_voltage\x18\x06 \x01(\x05\x12\x1a\n\x12main_bus_a_current\x18\x07 \x01(\x05\x12\x1a\n\x12main_bus_b_voltage\x18\x08 \x01(\x05\x12\x1a\n\x12main_bus_b_current\x18\t \x01(\x05\x12\x1a\n\x12main_bus_a_enabled\x18\n \x01(\x08\x12\x1a\n\x12main_bus_b_enabled\x18\x0b \x01(\x08\"\x1e\n\nIMURequest\x12\x10\n\x08\x64\x65st_adr\x18\x01 \x01(\r\"r\n\x0bIMUResponse\x12\x16\n\x0ereceive_status\x18\x01 \x01(\x08\x12\x12\n\ncrc_status\x18\x02 \x01(\x08\x12\x37\n\x08response\x18\x03 \x01(\x0b\x32%.robot_hw_endpoint.grpc.LLIMUResponse\" \n\x0cMotorRequest\x12\x10\n\x08\x64\x65st_adr\x18\x01 \x01(\r\"v\n\rMotorResponse\x12\x16\n\x0ereceive_status\x18\x01 \x01(\x08\x12\x12\n\ncrc_status\x18\x02 \x01(\x08\x12\x39\n\x08response\x18\x03 \x01(\x0b\x32\'.robot_hw_endpoint.grpc.LLMotorResponse\"S\n\rCameraRequest\x12\x11\n\tcamera_id\x18\x01 \x01(\r\x12\r\n\x05width\x18\x02 \x01(\r\x12\x0e\n\x06height\x18\x03 \x01(\r\x12\x10\n\x08\x63hannels\x18\x04 \x01(\r\"P\n\x0e\x43\x61meraResponse\x12\r\n\x05width\x18\x01 \x01(\r\x12\x0e\n\x06height\x18\x02 \x01(\r\x12\x10\n\x08\x63hannels\x18\x03 \x01(\r\x12\r\n\x05image\x18\x04 \x01(\x0c\x32\xe1\x05\n\x10HardwareEndpoint\x12Q\n\x04Ping\x12#.robot_hw_endpoint.grpc.PingRequest\x1a$.robot_hw_endpoint.grpc.PingResponse\x12Z\n\x0cGetBMSStatus\x12%.robot_hw_endpoint.grpc.StatusRequest\x1a#.robot_hw_endpoint.grpc.BMSResponse\x12U\n\nBMSControl\x12\".robot_hw_endpoint.grpc.BMSRequest\x1a#.robot_hw_endpoint.grpc.BMSResponse\x12Z\n\x0cGetIMUStatus\x12%.robot_hw_endpoint.grpc.StatusRequest\x1a#.robot_hw_endpoint.grpc.IMUResponse\x12U\n\nIMUControl\x12\".robot_hw_endpoint.grpc.IMURequest\x1a#.robot_hw_endpoint.grpc.IMUResponse\x12^\n\x0eGetMotorStatus\x12%.robot_hw_endpoint.grpc.StatusRequest\x1a%.robot_hw_endpoint.grpc.MotorResponse\x12[\n\x0cMotorControl\x12$.robot_hw_endpoint.grpc.MotorRequest\x1a%.robot_hw_endpoint.grpc.MotorResponse\x12W\n\x06\x43\x61mera\x12%.robot_hw_endpoint.grpc.CameraRequest\x1a&.robot_hw_endpoint.grpc.CameraResponseb\x06proto3')
 
 _globals = globals()
 _builder.BuildMessageAndEnumDescriptors(DESCRIPTOR, _globals)
@@ -39,21 +39,21 @@ if not _descriptor._USE_C_DESCRIPTORS:
   _globals['_PINGRESPONSE']._serialized_start=129
   _globals['_PINGRESPONSE']._serialized_end=208
   _globals['_BMSREQUEST']._serialized_start=210
-  _globals['_BMSREQUEST']._serialized_end=240
-  _globals['_BMSRESPONSE']._serialized_start=242
-  _globals['_BMSRESPONSE']._serialized_end=356
-  _globals['_IMUREQUEST']._serialized_start=358
-  _globals['_IMUREQUEST']._serialized_end=388
-  _globals['_IMURESPONSE']._serialized_start=390
-  _globals['_IMURESPONSE']._serialized_end=504
-  _globals['_MOTORREQUEST']._serialized_start=506
-  _globals['_MOTORREQUEST']._serialized_end=538
-  _globals['_MOTORRESPONSE']._serialized_start=540
-  _globals['_MOTORRESPONSE']._serialized_end=658
-  _globals['_CAMERAREQUEST']._serialized_start=660
-  _globals['_CAMERAREQUEST']._serialized_end=743
-  _globals['_CAMERARESPONSE']._serialized_start=745
-  _globals['_CAMERARESPONSE']._serialized_end=825
-  _globals['_HARDWAREENDPOINT']._serialized_start=828
-  _globals['_HARDWAREENDPOINT']._serialized_end=1565
+  _globals['_BMSREQUEST']._serialized_end=294
+  _globals['_BMSRESPONSE']._serialized_start=297
+  _globals['_BMSRESPONSE']._serialized_end=594
+  _globals['_IMUREQUEST']._serialized_start=596
+  _globals['_IMUREQUEST']._serialized_end=626
+  _globals['_IMURESPONSE']._serialized_start=628
+  _globals['_IMURESPONSE']._serialized_end=742
+  _globals['_MOTORREQUEST']._serialized_start=744
+  _globals['_MOTORREQUEST']._serialized_end=776
+  _globals['_MOTORRESPONSE']._serialized_start=778
+  _globals['_MOTORRESPONSE']._serialized_end=896
+  _globals['_CAMERAREQUEST']._serialized_start=898
+  _globals['_CAMERAREQUEST']._serialized_end=981
+  _globals['_CAMERARESPONSE']._serialized_start=983
+  _globals['_CAMERARESPONSE']._serialized_end=1063
+  _globals['_HARDWAREENDPOINT']._serialized_start=1066
+  _globals['_HARDWAREENDPOINT']._serialized_end=1803
 # @@protoc_insertion_point(module_scope)

@@ -33,11 +33,18 @@ class SerialProtocolEndpoint(SerialBus, IOData):
             # prepare for new receiving 
             self.init_receiving_data()
 
+            print("A")
+
+            print(type(request))
             # serialise protobuffer data
             transmit_buffer = self._parse_transmit_data(request)
 
+            print(transmit_buffer)
+
+            print("B")
             self.send_data(src_adr, dest_adr, transmit_buffer)
 
+            print("C")
             time_start = time.time()
             time_stop  = time_start + time_limit
 
